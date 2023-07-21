@@ -3,11 +3,13 @@ package com.bmprj.myapplication.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bmprj.myapplication.R
 import com.bmprj.myapplication.model.Country
+import com.bmprj.myapplication.util.downLoadFromUrl
 import com.bmprj.myapplication.view.FeedFragmentDirections
 
 class CountryAdapter(val countryList:ArrayList<Country>):
@@ -28,6 +30,7 @@ class CountryAdapter(val countryList:ArrayList<Country>):
     override fun onBindViewHolder(holder: CountryAdapter.CountryViewHolder, position: Int) {
         val name = holder.view.findViewById<TextView>(R.id.name)
         val region =holder.view.findViewById<TextView>(R.id.region)
+        val imgView = holder.view.findViewById<ImageView>(R.id.imgView)
         name.text=countryList[position].countyName
         region.text=countryList[position].countryRegion
 
@@ -35,6 +38,8 @@ class CountryAdapter(val countryList:ArrayList<Country>):
             val action = FeedFragmentDirections.actionFeedFragmentToCountryFragment()
             Navigation.findNavController(it).navigate(action)
         }
+
+        imgView.downLoadFromUrl(countryList[position].imageUrl)
     }
 
     override fun getItemCount(): Int {

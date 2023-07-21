@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bmprj.myapplication.R
 import com.bmprj.myapplication.adapter.CountryAdapter
 import com.bmprj.myapplication.viewmodel.FeedViewModel
@@ -18,6 +19,7 @@ import com.bmprj.myapplication.viewmodel.FeedViewModel
 class FeedFragment : Fragment() {
     private lateinit var viewModel : FeedViewModel
     private val countryAdapter = CountryAdapter(arrayListOf())
+    private lateinit var swipeRefreshLayout:SwipeRefreshLayout
     private lateinit var countryLoading:ProgressBar
     private lateinit var countryError:TextView
     private lateinit var recyV :RecyclerView
@@ -36,6 +38,7 @@ class FeedFragment : Fragment() {
 
         countryLoading = view.findViewById(R.id.countryLoading)
         countryError = view.findViewById(R.id.countryError)
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         viewModel = ViewModelProviders.of(this).get(FeedViewModel::class.java)
         viewModel.refreshData()
 
@@ -43,6 +46,14 @@ class FeedFragment : Fragment() {
         recyV.layoutManager= LinearLayoutManager(context)
         recyV.adapter = countryAdapter
 
+        swipeRefreshLayout.setOnRefreshListener {
+
+            swipeRefreshLayout.isRefreshing=false
+            recyV.visibility=View.GONE
+            countryError.visibility=View.GONE
+            countryLoading.visibility=View.VISIBLE
+            viewModel.refreshData()
+        }
 
         observeLiveData()
 
